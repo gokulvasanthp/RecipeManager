@@ -1,0 +1,333 @@
+.batch-run-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.header {
+  margin-bottom: 30px;
+
+  h2 {
+    margin: 0 0 8px 0;
+    color: #333;
+  }
+
+  .subtitle {
+    margin: 0;
+    color: #666;
+    font-size: 13px;
+    font-style: italic;
+  }
+}
+
+.alert {
+  padding: 12px 16px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+
+  &.alert-error {
+    background-color: #fee;
+    color: #c33;
+    border: 1px solid #fcc;
+  }
+}
+
+.loading, .empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: #666;
+}
+
+/* Batch Item - Card Layout */
+.batch-item {
+  background: white;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  margin-bottom: 24px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+  transition: box-shadow 0.2s;
+
+  &:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  }
+
+  .batch-summary {
+    padding: 20px;
+    border-bottom: 1px solid #dee2e6;
+    background-color: #f8f9fa;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 24px;
+
+    .batch-info {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+
+      h4 {
+        margin: 0;
+        color: #333;
+        font-size: 16px;
+        font-weight: 600;
+      }
+
+      .status-badge {
+        padding: 4px 12px;
+        border-radius: 12px;
+        font-size: 11px;
+        font-weight: 600;
+        text-transform: uppercase;
+        white-space: nowrap;
+
+        &.status-pending {
+          background-color: #d1ecf1;
+          color: #0c5460;
+        }
+
+        &.status-running {
+          background-color: #fff3cd;
+          color: #856404;
+          animation: pulse 2s infinite;
+        }
+
+        &.status-completed {
+          background-color: #d4edda;
+          color: #155724;
+        }
+
+        &.status-failed {
+          background-color: #f8d7da;
+          color: #721c24;
+        }
+      }
+
+      .recipe-id {
+        color: #666;
+        font-size: 12px;
+        white-space: nowrap;
+      }
+    }
+
+    .batch-quick-stats {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+
+      .stat {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+
+        .label {
+          color: #999;
+          font-size: 11px;
+          text-transform: uppercase;
+          font-weight: 600;
+        }
+
+        .value {
+          color: #333;
+          font-size: 16px;
+          font-weight: 600;
+        }
+      }
+    }
+  }
+}
+
+/* Batch Actions */
+.batch-actions {
+  padding: 16px 20px;
+  background-color: #fff;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  align-items: center;
+  border-top: 1px solid #dee2e6;
+
+  .started-time {
+    margin-left: auto;
+    color: #999;
+    font-size: 12px;
+  }
+}
+
+.btn {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.2s;
+
+  &:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  &.btn-success {
+    background-color: #28a745;
+    color: white;
+
+    &:hover {
+      background-color: #218838;
+    }
+  }
+
+  &.btn-warning {
+    background-color: #ffc107;
+    color: #333;
+
+    &:hover {
+      background-color: #e0a800;
+    }
+  }
+
+  &.btn-delete {
+    background-color: #dc3545;
+    color: white;
+
+    &:hover {
+      background-color: #c82333;
+    }
+  }
+}
+
+/* Animation for running status */
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+/* Assembly Legend */
+.assembly-legend {
+  background-color: #f0f8ff;
+  border: 1px solid #b3d9ff;
+  border-radius: 6px;
+  padding: 16px;
+  margin-top: 32px;
+
+  .legend-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 12px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    .legend-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 4px;
+      font-weight: 600;
+      color: white;
+      font-size: 12px;
+      flex-shrink: 0;
+
+      &.assembly-100 {
+        background-color: #007bff;
+      }
+
+      &.assembly-150 {
+        background-color: #ffc107;
+        color: #333;
+      }
+    }
+
+    span {
+      color: #333;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .batch-summary {
+    flex-direction: column;
+    align-items: flex-start;
+
+    .batch-quick-stats {
+      width: 100%;
+      justify-content: flex-start;
+
+      .stat {
+        align-items: flex-start;
+      }
+    }
+  }
+
+  .batch-actions {
+    flex-direction: column;
+
+    .started-time {
+      margin-left: 0;
+      width: 100%;
+      text-align: center;
+    }
+
+    .btn {
+      flex: 1;
+      min-width: 120px;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .batch-item {
+    margin-bottom: 16px;
+  }
+
+  .batch-summary {
+    padding: 16px;
+    gap: 12px;
+
+    .batch-info {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+
+      h4 {
+        font-size: 14px;
+      }
+    }
+
+    .batch-quick-stats {
+      gap: 12px;
+
+      .stat {
+        .label {
+          font-size: 10px;
+        }
+
+        .value {
+          font-size: 14px;
+        }
+      }
+    }
+  }
+
+  .batch-actions {
+    padding: 12px 16px;
+    flex-direction: column;
+
+    .btn {
+      width: 100%;
+    }
+  }
+}

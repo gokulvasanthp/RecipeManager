@@ -1,0 +1,105 @@
+<div class="recipe-form-container">
+  <div class="header">
+    <h2>{{ isEditing ? 'Edit Recipe' : 'New Recipe' }}</h2>
+  </div>
+
+  <div *ngIf="error" class="alert alert-error">{{ error }}</div>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="recipe-form">
+    <div class="form-section">
+      <div class="form-group">
+        <label for="name">Recipe Name *</label>
+        <input type="text" id="name" formControlName="name" class="form-control" required>
+        <span *ngIf="form.get('name')?.invalid && form.get('name')?.touched" class="error-text">
+          Name is required and must be at least 3 characters
+        </span>
+      </div>
+
+      <div class="form-group">
+        <label for="description">Description</label>
+        <textarea id="description" formControlName="description" class="form-control" rows="4"></textarea>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="batchSize">Batch Size *</label>
+          <input type="number" id="batchSize" formControlName="batchSize" class="form-control" 
+                 step="0.01" required>
+          <span *ngIf="form.get('batchSize')?.invalid && form.get('batchSize')?.touched" class="error-text">
+            Batch size is required
+          </span>
+        </div>
+
+        <div class="form-group">
+          <label for="unit">Unit *</label>
+          <input type="text" id="unit" formControlName="unit" class="form-control" required>
+          <span *ngIf="form.get('unit')?.invalid && form.get('unit')?.touched" class="error-text">
+            Unit is required
+          </span>
+        </div>
+
+        <div class="form-group">
+          <label for="isActive">
+            <input type="checkbox" id="isActive" formControlName="isActive">
+            Active
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <div class="section-header">
+        <h3>Ingredients</h3>
+        <button type="button" class="btn btn-secondary" (click)="addIngredient()">+ Add Ingredient</button>
+      </div>
+
+      <div formArrayName="ingredients" class="ingredients-list">
+        <div *ngFor="let ingredient of getIngredientsArray(); let i = index" 
+             [formGroupName]="i" class="ingredient-item">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Name *</label>
+              <input type="text" formControlName="name" class="form-control" required>
+            </div>
+
+            <div class="form-group">
+              <label>Quantity *</label>
+              <input type="number" formControlName="quantity" class="form-control" step="0.01" required>
+            </div>
+
+            <div class="form-group">
+              <label>Unit *</label>
+              <input type="text" formControlName="unit" class="form-control" required>
+            </div>
+
+            <div class="form-group">
+              <label>Sequence</label>
+              <input type="number" formControlName="sequenceOrder" class="form-control" required>
+            </div>
+
+            <button type="button" class="btn btn-small btn-delete" (click)="removeIngredient(i)" 
+                    title="Remove ingredient">
+              Remove
+            </button>
+          </div>
+
+          <div class="form-group full-width">
+            <label>Notes</label>
+            <textarea formControlName="notes" class="form-control" rows="2"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="ingredients.length === 0" class="empty-ingredients">
+        No ingredients added yet. <a (click)="addIngredient()" class="link">Add one</a>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary" [disabled]="loading || !form.valid">
+        {{ loading ? 'Saving...' : 'Save Recipe' }}
+      </button>
+      <button type="button" class="btn btn-secondary" (click)="cancel()">Cancel</button>
+    </div>
+  </form>
+</div>

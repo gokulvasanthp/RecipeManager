@@ -1,0 +1,26 @@
+<div *ngIf="status" class="plc-status-card">
+  <div class="status-content">
+    <div class="status-info">
+      <h3>PLC Connection Status</h3>
+      <div class="status-indicators">
+        <span class="indicator-item">
+          <span [class]="'indicator ' + (status.connected ? 'connected' : 'disconnected')"></span>
+          {{ status.connected ? 'Connected' : 'Disconnected' }}
+        </span>
+        <span class="indicator-item">
+          Mode: <strong>{{ status.offlineMode ? 'OFFLINE' : 'ONLINE' }}</strong>
+        </span>
+      </div>
+    </div>
+
+    <div class="status-actions">
+      <button class="btn btn-toggle" (click)="toggleMode()" [disabled]="loading">
+        {{ loading ? 'Switching...' : (status.offlineMode ? 'Go Online' : 'Go Offline') }}
+      </button>
+    </div>
+  </div>
+
+  <div *ngIf="message" class="message" [class.success]="message.includes('Switched')">
+    {{ message }}
+  </div>
+</div>

@@ -1,0 +1,99 @@
+<div class="batch-monitor-container" *ngIf="batchRun">
+  <div class="monitor-card">
+    <!-- Header with Status -->
+    <div class="monitor-header">
+      <div class="header-left">
+        <h3>Batch {{ batchRun.batchNumber }}</h3>
+        <span [ngClass]="'badge ' + getStatusBadgeClass()" *ngIf="batchProgress">
+          {{ batchProgress.status }}
+        </span>
+      </div>
+      <button class="btn btn-refresh" (click)="refreshProgress()" [disabled]="loading" title="Refresh progress">
+        ↻
+      </button>
+    </div>
+
+    <!-- Error Alert -->
+    <div *ngIf="error" class="alert alert-error">
+      {{ error }}
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="loading && !batchProgress" class="loading-state">
+      <div class="spinner"></div>
+      <p>Loading batch progress...</p>
+    </div>
+
+    <!-- Batch Progress Display -->
+    <div *ngIf="batchProgress" class="progress-section">
+      <!-- Progress Bar (from Assembly 100: ProgressPercentage) -->
+      <div class="progress-container">
+        <div class="progress-label">
+          <span class="label">Progress</span>
+          <span class="percentage">{{ progressPercentage }}%</span>
+        </div>
+        <div class="progress-bar-wrapper">
+          <div class="progress-bar" [style.width.%]="progressPercentage" [style.backgroundColor]="getProgressColor()">
+            <span *ngIf="progressPercentage > 10" class="progress-text">{{ progressPercentage }}%</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quantity Metrics (from Assembly 100) -->
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <div class="metric-label">Target Quantity</div>
+          <div class="metric-value">{{ batchProgress.targetQuantity }} {{ batchRun.targetQuantity ? 'units' : 'kg' }}</div>
+          <div class="metric-source">→ Assembly 100</div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-label">Current Quantity</div>
+          <div class="metric-value">{{ batchProgress.currentQuantity | number: '1.2-2' }} {{ batchRun.targetQuantity ? 'units' : 'kg' }}</div>
+          <div class="metric-source">→ Assembly 100</div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-label">Elapsed Time</div>
+          <div class="metric-value">{{ formatTime(elapsedTime) }}</div>
+          <div class="metric-source">→ Assembly 100</div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-label">Est. Remaining</div>
+          <div class="metric-value">{{ formatTime(estimatedRemainingTime) }}</div>
+          <div class="metric-source">Calculated</div>
+        </div>
+      </div>
+
+      <!-- Simulator Data Source Info -->
+      <div class="simulator-info">
+        <div class="info-header">
+          <span class="info-icon">ℹ</span>
+          <strong>PLC Simulator Data (EtherNet/IP Assembly 100)</strong>
+        </div>
+        <div class="info-content">
+          <p>This data is read from the OpENer PLC simulator via EtherNet/IP protocol:</p>
+          <ul>
+            <li><strong>RecipeID:</strong> {{ batchRun.recipeId }} (from PLC variable)</li>
+            <li><strong>BatchID:</strong> {{ batchRun.id }} (from PLC variable)</li>
+            <li><strong>BatchStatus:</strong> {{ batchProgress.status }} (from PLC variable)</li>
+            <li><strong>TargetQuantity:</strong> {{ batchProgress.targetQuantity }} (from PLC variable)</li>
+            <li><strong>ActualQuantity:</strong> {{ batchProgress.currentQuantity | number: '1.2-2' }} (from PLC variable)</li>
+            <li><strong>ProgressPercentage:</strong> {{ progressPercentage }}% (from PLC variable)</li>
+            <li><strong>ElapsedTime:</strong> {{ elapsedTime }}s (from PLC variable)</li>
+          </ul>
+          <p class="note">
+            <strong>Simulator Mode:</strong> The batch progresses automatically over ~60 seconds in offline mode.
+            ActualQuantity increases proportionally, reaching TargetQuantity when ProgressPercentage = 100%.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- No Progress Data -->
+    <div *ngIf="!loading && !batchProgress" class="empty-state">
+      <p>Start the batch to see progress data from the PLC simulator</p>
+    </div>
+  </div>
+</div>

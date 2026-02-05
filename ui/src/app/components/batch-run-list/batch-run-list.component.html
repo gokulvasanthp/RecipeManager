@@ -1,0 +1,80 @@
+<div class="batch-run-container">
+  <div class="header">
+    <h2>Batch Runs</h2>
+    <p class="subtitle">Real-time monitoring with PLC simulator (EtherNet/IP Assembly 100)</p>
+  </div>
+
+  <div *ngIf="error" class="alert alert-error">{{ error }}</div>
+
+  <div *ngIf="loading" class="loading">Loading batch runs...</div>
+
+  <div *ngIf="!loading && batchRuns.length === 0" class="empty-state">
+    <p>No batch runs found</p>
+  </div>
+
+  <div *ngIf="!loading && batchRuns.length > 0">
+    <!-- Expanded View for Running Batches -->
+    <div *ngFor="let batch of batchRuns" class="batch-item">
+      <div class="batch-summary">
+        <div class="batch-info">
+          <h4>{{ batch.batchNumber }}</h4>
+          <span [class]="'status-badge ' + getStatusClass(batch.status)">{{ batch.status }}</span>
+          <span class="recipe-id">Recipe ID: {{ batch.recipeId }}</span>
+        </div>
+        <div class="batch-quick-stats">
+          <div class="stat">
+            <span class="label">Target Qty:</span>
+            <span class="value">{{ batch.targetQuantity }}</span>
+          </div>
+          <div class="stat">
+            <span class="label">Actual Qty:</span>
+            <span class="value">{{ batch.actualQuantity || '-' }}</span>
+          </div>
+          <div class="stat">
+            <span class="label">Operator:</span>
+            <span class="value">{{ batch.operatorName || '-' }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Batch Monitor with Simulator Data (Assembly 100) -->
+      <app-batch-monitor [batchRun]="batch"></app-batch-monitor>
+
+      <!-- Action Buttons (Assembly 150 - Control Commands) -->
+      <div class="batch-actions">
+        <button *ngIf="batch.status === 'PENDING'" 
+                class="btn btn-success" 
+                (click)="startBatch(batch.id)" 
+                title="Send StartCmd=1 to Assembly 150">
+          ▶ Start Batch
+        </button>
+        <button *ngIf="batch.status === 'RUNNING'" 
+                class="btn btn-warning" 
+                (click)="stopBatch(batch.id)" 
+                title="Send StopCmd=1 to Assembly 150">
+          ⏹ Stop Batch
+        </button>
+        <button class="btn btn-delete" 
+                (click)="deleteBatchRun(batch.id)" 
+                title="Delete batch run">
+          🗑 Delete
+        </button>
+        <span *ngIf="batch.startedAt" class="started-time">
+          Started: {{ batch.startedAt | date:'short' }}
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Assembly Information Legend -->
+  <div class="assembly-legend" *ngIf="!loading && batchRuns.length > 0">
+    <div class="legend-item">
+      <span class="legend-icon assembly-100">100</span>
+      <span><strong>Input Assembly (PLC → App):</strong> RecipeID, BatchID, Status, Quantity, Progress, ElapsedTime</span>
+    </div>
+    <div class="legend-item">
+      <span class="legend-icon assembly-150">150</span>
+      <span><strong>Output Assembly (App → PLC):</strong> StartCmd, StopCmd, AckCmd (triggered by buttons above)</span>
+    </div>
+  </div>
+</div>
